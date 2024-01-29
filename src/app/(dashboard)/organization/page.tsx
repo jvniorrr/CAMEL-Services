@@ -4,14 +4,10 @@ import {
 	OrgDetailsCard,
 } from '@/components/SharedComponents/DetailsCard/DetailsCard';
 import { createSupbaseServerClientReadOnly } from '@/lib/supabase/server';
+import { IOrganization } from '@/types/database.interface';
 
 export default async function Page() {
-	const supabase = await createSupbaseServerClientReadOnly();
-	const { data, error } = await supabase.from('organization').select('*');
-
-	if (error) {
-		console.error(error);
-	}
+	const allOrgs = await getOrganizationsWithRole();
 
 	return (
 		<div className="w-full flex flex-col">
@@ -20,12 +16,12 @@ export default async function Page() {
 			</span>
 			{/* <CreateOrgModal  /> */}
 			<div className="flex-grow overflow-y-auto bg-white text-default-text">
-				{data && data?.length > 0 ? (
+				{allOrgs && allOrgs?.length > 0 ? (
 					<>
 						<div className="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-4 m-4 gap-4">
 							{/* NOTE: When fetching the organization associated with a user, if non center the create org card. */}
 							<CreateOrgCard />
-							{data.map(org => (
+							{allOrgs.map(org => (
 								<OrgDetailsCard
 									key={org.id}
 									{...org}
@@ -44,3 +40,43 @@ export default async function Page() {
 		</div>
 	);
 }
+
+interface IOrganization_Role extends IOrganization {
+	role: string;
+}
+
+const getOrganizationsWithRole = async (): Promise<IOrganization_Role[]> => {
+	const supabase = await createSupbaseServerClientReadOnly();
+	const { data: organizations, error: orgError } = await supabase
+		.from('organization')
+		.select('*');
+
+	if (orgError) {
+		console.error(orgError);
+		return [];
+	}
+
+	const organizationsWithPermissions = await Promise.all(
+		organizations.map(async org => {
+			const { data: roleData, error: roleError } = await supabase
+				.from('organization_member_view')
+				.select('role')
+				.eq('org_id', org.id);
+
+			if (roleError) {
+				console.error(roleError);
+				return { ...org, role: '' };
+			}
+
+			const role = roleData[0]?.role || '';
+
+			if (typeof role === 'undefined') {
+				return { ...org, role: '' };
+			}
+
+			return { ...org, role: role };
+		}),
+	);
+
+	return organizationsWithPermissions;
+};
