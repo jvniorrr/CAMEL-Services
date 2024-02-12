@@ -1,13 +1,15 @@
 @tailwind base;
 
 @layer base {
-	.container {
-		@apply relative inline-flex items-center justify-center w-20 h-20 bg-primary-green-500 rounded-full;
+	.accountcontainer {
+		@apply w-full items-center justify-center mt-1 p-6 bg-white rounded-lg shadow-md;
 	}
 }
-
-.accountcontainer {
-	@apply max-w-4xl mx-auto mt-10 p-6 bg-white rounded-lg shadow-md;
+.accounttitle {
+	@apply text-primary-green-600 text-4xl mt-1 font-bold px-2 py-1;
+}
+.circlecontainer {
+	@apply relative inline-flex items-center justify-center w-20 h-20 bg-primary-green-500 rounded-full;
 }
 .accountinfo {
 	@apply flex items-center gap-2;
@@ -26,7 +28,7 @@
 }
 
 .infocolumns {
-	@apply grid gap-2 mb-6 md:grid-cols-1;
+	@apply grid gap-2 mb-6;
 }
 
 .inputf {
@@ -34,5 +36,5 @@
 }
 
 .labelsformat {
-	@apply block mb-2 ml-2 font-medium text-gray-400;
+	@apply block mb-2 ml-2 my-2 font-medium text-gray-400;
 }
