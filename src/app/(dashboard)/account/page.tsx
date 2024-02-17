@@ -1,6 +1,6 @@
 import { AccountInputField } from '@/components/Account/AccountInputField/AccountInputField';
 import { getOrganizationMemberRole, getUserInformation } from '@/lib/actions';
-import { IUsers_table } from '@/types/database.interface';
+import { IUsers } from '@/types/database.interface';
 import { cookies } from 'next/headers';
 
 const AccountPage = async () => {
@@ -14,13 +14,15 @@ const AccountPage = async () => {
 
 	// references backend for role of user
 	const roleResponse = await getOrganizationMemberRole(org);
-	const role: string = roleResponse?.role || '';
+	const role: string =
+		roleResponse?.role ||
+		'Please select an organization to view your role.';
 
 	return (
 		<>
 			<AccountInputField
 				userrole={role}
-				user={userInfo as IUsers_table}
+				user={userInfo as IUsers}
 			/>
 		</>
 	);
