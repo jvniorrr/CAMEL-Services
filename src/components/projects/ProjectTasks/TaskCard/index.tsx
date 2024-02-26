@@ -56,6 +56,10 @@ export function ProjectTask({ task, role }: { task: ITasks; role: string }) {
 		}
 	};
 
+	const getDateString = (date: Date) => {
+		return new Date(date).toISOString().split('T')[0];
+	};
+
 	return (
 		<div className={`project-task ${PoppinsSemiBold.className}`}>
 			<div
@@ -112,7 +116,8 @@ export function ProjectTask({ task, role }: { task: ITasks; role: string }) {
 					</svg>
 
 					<span className="text">
-						{new Date(due_date).toLocaleDateString()}
+						{/* {new Date(due_date).toLocaleDateString()} */}
+						{getDateString(due_date)}
 					</span>
 				</div>
 
