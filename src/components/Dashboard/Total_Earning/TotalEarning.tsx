@@ -11,6 +11,9 @@ const TotalEarning = () => {
 	const currentEarning = 12875;
 	const previousEarning = 10000;
 
+	// Check for no data scenario
+	const hasData = currentEarning !== null && previousEarning !== null;
+
 	// Calculates difference in monthly earnings, turns it into a percent, and checks if it is postive
 	const earnDifference =
 		((currentEarning - previousEarning) / previousEarning) * 100;
@@ -20,26 +23,33 @@ const TotalEarning = () => {
 
 	return (
 		<div className="total-earning-container">
-			<div className="earning-header">
-				<div className="earning-title">Total earning</div>
-			</div>
-			<div className="earning-format">
-				<div className="earning-value">
-					${currentEarning.toLocaleString()}
-				</div>
-				<div
-					className={`earning-percentage ${
-						isPositive
-							? 'earning-percentage-positive'
-							: 'earning-percentage-negative'
-					}`}
-				>
-					{isPositive ? '▲' : '▼'} {formatDifference}%
-				</div>
-			</div>
-			<div className="earning-comparison">
-				Compared to ${previousEarning.toLocaleString()} last year
-			</div>
+			{hasData ? (
+				<>
+					<div className="earning-header">
+						<div className="earning-title">Total earning</div>
+					</div>
+					<div className="earning-format">
+						<div className="earning-value">
+							${currentEarning.toLocaleString()}
+						</div>
+						<div
+							className={`earning-percentage ${
+								isPositive
+									? 'earning-percentage-positive'
+									: 'earning-percentage-negative'
+							}`}
+						>
+							{isPositive ? '▲' : '▼'} {formatDifference}%
+						</div>
+					</div>
+					<div className="earning-comparison">
+						Compared to ${previousEarning.toLocaleString()} last
+						year
+					</div>
+				</>
+			) : (
+				<div className="no-data-message">No data available</div>
+			)}
 		</div>
 	);
 };
